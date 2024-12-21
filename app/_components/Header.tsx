@@ -35,15 +35,20 @@ const MenuList = [
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    <Navbar maxWidth="full">
+    <Navbar maxWidth="full" onMenuOpenChange={setIsMenuOpen}>
+      <NavbarMenuToggle
+        aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+        className="sm:hidden"
+      />
       <NavbarBrand>
         <Image src={"/logo.svg"} alt="logo" width={50} height={50} />
         <p className="font-bold text-2xl text-primary ml-3">Kidso Story</p>
       </NavbarBrand>
-      <NavbarContent justify="center">
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
         {MenuList.map((item, index) => (
-          <NavbarItem className="text-xl text-primary font-medium hover:underline ml-2">
+          <NavbarItem className="text-xl text-primary font-medium hover:underline">
             <Link aria-current="page" href={item.path}>
               {item.name}
             </Link>
@@ -53,6 +58,15 @@ const Header = () => {
       <NavbarContent justify="end">
         <Button color="primary">Get Started</Button>
       </NavbarContent>
+      <NavbarMenu>
+        {MenuList.map((item, index) => (
+          <NavbarMenuItem className="text-xl text-primary font-medium hover:underline ml-2">
+            <Link aria-current="page" href={item.path}>
+              {item.name}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
     </Navbar>
   );
 };
