@@ -12,6 +12,7 @@ import { StoryData } from "@/config/schema";
 import uuid4 from "uuid4";
 import CustomLoader from "./_components/CustomLoader";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const CREATE_STORY_PROMPT = process.env.NEXT_PUBLIC_CREATE_STORY_PROMPT;
 
@@ -50,11 +51,21 @@ const CreateStoryPage = () => {
       .replace("{imageStyle}", formData?.imageStyle ?? "");
     try {
       const result = await chatSession.sendMessage(FINAL_PROMPT);
-      console.log(result?.response.text());
-      const resp = await SaveInDB(result?.response.text());
-      console.log(resp);
-      setLoading(false);
+      const story = JSON.parse(result?.response.text());
+      const imageResp = await axios.post("/api/generate", {
+        prompt:
+          "Add text with title:" +
+          story?.story_cover?.title +
+          "in bold text of book cover, " +
+          story?.story_cover?.image_prompt,
+      });
+
+      console.log("Image API Response:", imageResp?.data);
+      //console.log(result?.response.text());
+      // const resp = await SaveInDB(result?.response.text());
+      // console.log(resp);
       router.refresh();
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
