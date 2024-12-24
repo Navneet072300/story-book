@@ -61,6 +61,15 @@ const CreateStoryPage = () => {
       });
 
       console.log("Image API Response:", imageResp?.data);
+
+      const imageUrl = imageResp?.data?.imageUrl;
+
+      const imageResult = await axios.post("/api/save-image", {
+        url: imageUrl,
+      });
+
+      console.log(imageResult.data);
+
       //console.log(result?.response.text());
       // const resp = await SaveInDB(result?.response.text());
       // console.log(resp);
